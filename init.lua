@@ -1,71 +1,20 @@
 local Leader = require './leader/leader'
 
--- TODO:  This works sort of well, but it's kind of awkward, because you need to double
--- tap <leader> to get the default escape behavior.  I think I want to investigate making
--- the user press <leader> + <first chord char> before releasing <leader> in order to use
--- chords, and otherwise just falling back to <leader> being an escape press
---
--- The best way to do this is probably to use nested modals, I think?
--- See: https://gist.github.com/casouri/06e02230dbfd6ab68fd1798ddb025148, but use a better
--- registration API.  Something like I'm currently using, and just loop over the chords to
--- generate the nested modal map
---
--- TODO Addendum:  I don;t think that this modal idea will work properly.  The issue is that
--- a modal key system doesn't have a way to cancel if no possible completions are left, so
--- the user would have to manually 'escape'
-
-
-
-
-
-
-
-
-
 local leader = Leader.new({}, 'F18', 'ESCAPE')
-leader:bind('t', function ()
-    hs.alert.show('test [t]')
+
+leader:bind('l', function()
+    -- TODO: This seems broken?
+    local screen = hs.screen('DELL P2415Q')
+    if not screen then
+        screen = hs.screen.mainScreen()
+    end
+
+    tile_vertically(screen,
+        { hs.application'Microsoft Outlook':mainWindow(), 4 },
+        { hs.application'PureCloud':mainWindow(), 3 },
+        { hs.application'Google Chrome':findWindow('Hangouts'), 3 }
+    )
 end)
-
-
-
-
-
-
-
-
-
-
--- -- A global variable for the Hyper Mode
--- hyper = hs.hotkey.modal.new({}, 'F17')
-
--- -- Enter Hyper Mode when F18 (Hyper/Capslock) is pressed
--- function enterHyperMode()
---   hyper.triggered = false
---   hyper:enter()
--- end
-
--- -- Leave Hyper Mode when F18 (Hyper/Capslock) is pressed,
--- -- send ESCAPE if no other keys are pressed.
--- function exitHyperMode()
---   hyper:exit()
---   if not hyper.triggered then
---     hs.eventtap.keyStroke({}, 'ESCAPE')
---   end
--- end
-
--- -- Bind the Hyper key
--- f18 = hs.hotkey.bind({}, 'F18', enterHyperMode, exitHyperMode)
-
--- hyper:bind({}, 'l', function()
---     local screen = hs.screen('DELL P2415Q')
-
---     tile_vertically(screen, d
---         { hs.application'Microsoft Outlook':mainWindow(), 4 },
---         { hs.application'PureCloud':mainWindow(), 3 },
---         { hs.application'Google Chrome':findWindow('Hangouts'), 3 }
---     })
--- end)
 
 leader:bind({'d', 'w'}, function()
     local title = hs.window.focusedWindow():title()
